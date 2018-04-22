@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>archive_a: 2017/12 | jokerl-blog</title>
+    <title>虚拟机配置centos7静态IP | jokerl-blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     
@@ -142,51 +142,71 @@
 <!--文章列表-->
 <div class="wrapper">
   
-    <ul class="posts-list mb+ js-posts">
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-            <i class="post-status iconfont icon-icon"></i>  
-          
-          <h2 class="no-background"  >
-            <span><a href="/2017/12/03/分享一些喜欢的图影/">分享一些喜欢的图影</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/兴趣/">兴趣</a></li></ul>
+    <!--文章-->
+<article>
+	
+  
+    <h1 class="post-title" itemprop="name">
+      虚拟机配置centos7静态IP
+    </h1>
+  
 
 
-            <time class="post-time" datetime="2017-12-03T06:11:37.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2017-12-03</time>
-          </h2>
-        </li>
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-          <h2 class="no-background"  >
-            <span><a href="/2017/12/01/Jokerl的新世界/">Jokerl的新世界</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a></li></ul>
+	<div class='post-body mb'>
+		<p>笔者打算学习一下redis,所以配置一台linux服务器。所以就用VM服务器配置一台；结果搞了一下午加晚上才高明。<br>长话短说:直接正题</p>
+<p>##了解vm的连接模式 笔者采用NAT方式</p>
+<p> <img src="/img/2018-04-22/1.png" alt=""><br> <a href="https://www.cnblogs.com/fhsy9373/p/6964925.html" target="_blank" rel="noopener">其他模式介绍</a></p>
+<p> 大致说一下 ，就是 VMnet8 这块网卡是获取你路由器地址的 就等同于你电脑局域网的ip地位。<br> 而vm的虚拟网络编辑器等于加个一个路由器，把你的VMnet8获取的局域网ip当做外网ip来使用。</p>
+<p> <img src="/img/2018-04-22/2.png" alt=""><br> 整个配置过程你可以直接点击 虚拟网络的编辑器的还原默认设置就可以达到上网的效果，但你的虚拟ip是动态分配的。</p>
+<p> 在linux 先ipconfig 一下可以查看你的网卡 笔者这有三块网卡 lo  virbr0 和 ens33 第一块是本地网卡 第二块是虚拟网卡不做介绍；<br> 第三块网卡没显示ip 说明未开启；<br> 知道名字可以直接执行命令了 vim /etc/sysconfig/network-scripts/ifcfg-ens33<br> <img src="/img/2018-04-22/3.png" alt=""><br>  修改图中的地方，几个注意点说一下：<br>  1.static 表示变成获取 ；</p>
+<p>  2.ONBOOT 必须改成yes 不然会生效  笔者就是这里搞了好久</p>
+<p>  3.后面添加的信息既可以通过vm里的网路编辑器提示来进行添加了<br>   <img src="/img/2018-04-22/4.png" alt=""><br>   IPADDR 就是DHCP 里的一个只要介于两者之间即可</p>
+<p>  <img src="/img/2018-04-22/5.png" alt=""><br>  DNS1 GATEWAY 就是NAT里设置的网关<br>  保存之后，service network restast 就OK了 </p>
+<p><img src="/img/2018-04-22/6.png" alt=""><br>   ping <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a>  ping 115.239.210.27 都ok 说明dns和ip都ok；</p>
+<p>   但有时ping自己的主机ip 却不行原因在于： VMnet8获取的ip和vm虚拟网路编辑器同一个网段里面；<br>   <img src="/img/2018-04-22/7.png" alt=""></p>
+<p>   <img src="/img/2018-04-22/8.png" alt=""><br>   修改成自己获取就行了 </p>
+<p>   然后通过本地ssh去连接 成功；</p>
+<p>   ping不成功还有一个原因 ，就是你把自己的以太网进行了分享；结果笔者刚开就中招了，惭愧惭愧。</p>
 
+	</div>
+	<div class="meta split">
+		
+			<span>本文总阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+		
+		<time class="post-date" datetime="2018-04-22T15:19:16.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-04-22</time>
+	</div>
+</article>
 
-            <time class="post-time" datetime="2017-12-01T03:20:26.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2017-12-01</time>
-          </h2>
-        </li>
-      
-    </ul>
-    
+<!--评论-->
+
+	
+<div class="ds-thread" data-thread-key="虚拟机配置centos7静态IP" data-title="虚拟机配置centos7静态IP" data-url="http://yoursite.com/2018/04/22/虚拟机配置centos7静态IP/"></div>
+<script type="text/javascript">
+
+var duoshuoQuery = {short_name:"yumemor"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
 
   
 </div>
+
+
+  <svg id="bigTriangleColor" width="100%" height="40" viewBox="0 0 100 102" preserveAspectRatio="none">
+    <path d="M0 0 L50 100 L100 0 Z"></path>
+  </svg>
+
+  
+
+
+  <div class="wrapper"></div>
 
 
 
