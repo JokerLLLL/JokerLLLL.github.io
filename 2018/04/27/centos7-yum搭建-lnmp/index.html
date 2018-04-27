@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>tag: 技术 | jokerl-blog</title>
+    <title>centos7 yum搭建 lnmp | jokerl-blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     
@@ -139,58 +139,153 @@
 		</div>
 	</section>
 	
-		<figure class="top-image" data-enable=true></figure>
+		<figure class="top-image" style='background-image: url(/img/2018-04-27/1.jpg)' data-enable=false></figure>
 	
 </div>
 
 <!--文章列表-->
 <div class="wrapper">
   
-    <ul class="posts-list mb+ js-posts">
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-            <i class="post-status iconfont icon-icon"></i>  
-          
-          <h2 class="no-background"  >
-            <span><a href="/2018/04/27/centos7-yum搭建-lnmp/">centos7 yum搭建 lnmp</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a></li></ul>
+    <!--文章-->
+<article>
+	
+  
+    <h1 class="post-title" itemprop="name">
+      centos7 yum搭建 lnmp
+    </h1>
+  
 
 
-            <time class="post-time" datetime="2018-04-27T13:50:50.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-04-27</time>
-          </h2>
-        </li>
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-          <h2 class="no-background"  >
-            <span><a href="/2018/04/22/虚拟机配置centos7静态IP/">虚拟机配置centos7静态IP</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a></li></ul>
+	<div class='post-body mb'>
+		<p>上次配的虚拟机没环境 今天yum搭建一下 lnmp环境</p>
+<ol>
+<li><p>安装LNMP之前要安装EPEL，以便安装源以外的软件，如Nginx，phpMyAdmin等</p>
+<pre><code>    yum -y install epel-release
+    yum -y install wget
+</code></pre></li>
+</ol>
+<ol start="2">
+<li><p>安装Nginx</p>
+<pre><code>     yum -y install nginx 
+     systemctl start nginx #启动nginx 
+     systemctl enable nginx #设置开机启动
+</code></pre></li>
+<li><p>安装php</p>
+<p>直接安装php会是php5的版本，所以笔者安装之后又卸载了php5 ，如果想兼容安装，可以自行google。</p>
+<pre><code>       yum remove php* #删除之前版本
+    # 设置php7的yum源 
+    # 如果CentOS/RHEL 7.x:
+    rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+    # 如果CentOS/RHEL 6.x:
+    rpm -Uvh https://mirror.webtatic.com/yum/el6/latest.rpm
+    #进行安装php7
+    yum -y install php70w
+</code></pre><p> 安装其他插件，这里应该要装的至少有php-fpm  如果一个个装嫌烦 ，就直接 yum -y install php70w* ,但好像有的会装不上去，必要时候 php -m 可以看下安装的模块有没有</p>
+<pre><code> php70w
+ php70w-opcache
+ php70w-bcmath 
+ php70w-cli
+ php70w-common
+ php70w-dba 
+ php70w-devel 
+ php70w-embedded
+ php70w-enchant 
+ php70w-fpm 
+ php70w-gd 
+ php70w-imap 
+ php70w-interbase
+ php70w-intl 
+ php70w-ldap 
+ php70w-mbstring 
+ php70w-mcrypt 
+ php70w-mysql
+ php70w-mysqlnd
+ php70w-odbc
+ php70w-opcache
+ php70w-pdo 
+ php70w-pdo_dblib 
+ php70w-pear 
+ php70w-pecl-apcu 
+ php70w-pecl-imagick 
+ php70w-pecl-xdebug 
+ php70w-pgsql 
+ php70w-phpdbg 
+ php70w-process 
+ php70w-pspell 
+ php70w-recode 
+ php70w-snmp 
+ php70w-soap 
+ php70w-tidy 
+ php70w-xml 
+ php70w-xmlrpc
+</code></pre><p>要运行PHP网页，要启动php-fpm解释器。<br>修改php-fpm的配置<br> vim /etc/php-fpm.d/<a href="http://www.conf" target="_blank" rel="noopener">www.conf</a><br> 找到以下两行，解除注释<br> listen.owner = nobody<br> listen.group = nobody<br> 找下以下两行，将各自的apache改为nginx<br> user = apache -&gt; user = nginx<br> group = apache -&gt; group = nginx<br> 然后开启fpm</p>
+<pre><code> systemctl start php-fpm #开启php-fpm 
+ systemctl enable php-fpm #开机自动启动
+ ps -aux | grep php-fpm  #查看进程在不在
+</code></pre></li>
+</ol>
+<ol start="4">
+<li><p>mysql 安装</p>
+<p>直接命令行不好使，所以就加入源了。</p>
+<pre><code>  wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+  rpm -ivh mysql-community-release-el7-5.noarch.rpm
+  yum install mysql-server
+  systemctl enable mysqld     #自启
+  systemctl restart mysqld    #开启
+   mysql -uroot
+   mysql&gt; set password for &#39;root&#39;@&#39;localhost&#39; = password(&#39;123456&#39;);
+</code></pre></li>
+<li><p>安装phpmyadmin</p>
+<pre><code> wget https://files.phpmyadmin.net/phpMyAdmin/4.4.12/phpMyAdmin-4.4.12-all-languages.zip 
+ unzip phpMyAdmin-4.4.12-all-languages.zip 
+ mv phpMyAdmin-4.4.12-all-languages /usr/share/nginx/html/phpmyadmin
+ chown -R nginx.nginx /var/lib/php/session
+</code></pre></li>
+<li><p>之后就是配置nginx<br>配置过程 就不说了，主要是配置好后，虚拟机能用，主机不能用 ，那把linux 的防火墙添加规则吧。</p>
+<pre><code>      /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT  
+</code></pre></li>
+</ol>
 
+	</div>
+	<div class="meta split">
+		
+			<span>本文总阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+		
+		<time class="post-date" datetime="2018-04-27T13:50:50.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-04-27</time>
+	</div>
+</article>
 
-            <time class="post-time" datetime="2018-04-22T15:19:16.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-04-22</time>
-          </h2>
-        </li>
-      
-    </ul>
-    
+<!--评论-->
+
+	
+<div class="ds-thread" data-thread-key="centos7-yum搭建-lnmp" data-title="centos7 yum搭建 lnmp" data-url="http://yoursite.com/2018/04/27/centos7-yum搭建-lnmp/"></div>
+<script type="text/javascript">
+
+var duoshuoQuery = {short_name:"yumemor"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
 
   
 </div>
+
+
+  <svg id="bigTriangleColor" width="100%" height="40" viewBox="0 0 100 102" preserveAspectRatio="none">
+    <path d="M0 0 L50 100 L100 0 Z"></path>
+  </svg>
+
+  
+
+
+  <div class="wrapper"></div>
 
 
 
