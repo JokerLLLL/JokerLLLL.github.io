@@ -240,10 +240,12 @@
 <pre><code> wget https://files.phpmyadmin.net/phpMyAdmin/4.4.12/phpMyAdmin-4.4.12-all-languages.zip 
  unzip phpMyAdmin-4.4.12-all-languages.zip 
  mv phpMyAdmin-4.4.12-all-languages /usr/share/nginx/html/phpmyadmin
- chown -R nginx.nginx /var/lib/php/session
-</code></pre></li>
-<li><p>之后就是配置nginx<br>配置过程 就不说了，主要是配置好后，虚拟机能用，主机不能用 ，那把linux 的防火墙添加规则吧。</p>
+ chown -R nginx.nginx /var/lib/php/session #或者直接执行 chmod 777 /var/lib/php/session
+</code></pre><p> phpmyadmin的坑 主要在配置上，php要mbstring模块，还有要开启报错 display_errors=On;<br> 之后一定要重启php-fpm！！！！！！</p>
+</li>
+<li><p>之后就是配置nginx<br>配置过程 就不说了，主要是配置好后，虚拟机能用，主机不能用 ，那把linux 的防火墙添加规则吧。centos7使用的是<br>会使用firewall,所以看自己的系统了。</p>
 <pre><code>      /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT  
+      firewall-cmd --zone=public --add-port=80/tcp --permanent  #然后重启 systemctl restart firewalld
 </code></pre></li>
 </ol>
 
