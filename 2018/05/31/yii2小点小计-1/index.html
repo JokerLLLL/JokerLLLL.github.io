@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>archive_a | jokerl-blog</title>
+    <title>yii2小点小计-1 | jokerl-blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     
@@ -146,141 +146,118 @@
 <!--文章列表-->
 <div class="wrapper">
   
-    <ul class="posts-list mb+ js-posts">
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-            <i class="post-status iconfont icon-icon"></i>  
-          
-          <h2 class="no-background"  >
-            <span><a href="/2018/05/31/yii2小点小计-1/">yii2小点小计-1</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a></li></ul>
+    <!--文章-->
+<article>
+	
+  
+    <h1 class="post-title" itemprop="name">
+      yii2小点小计-1
+    </h1>
+  
 
 
-            <time class="post-time" datetime="2018-05-31T15:42:47.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-05-31</time>
-          </h2>
-        </li>
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-          <h2 class="no-background"  >
-            <span><a href="/2018/05/08/我在努力成为搬运工/">我在努力成为搬运工</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a></li></ul>
+	<div class='post-body mb'>
+		<h2 id="yii2自带验证规则rules的小计"><a href="#yii2自带验证规则rules的小计" class="headerlink" title="yii2自带验证规则rules的小计"></a>yii2自带验证规则rules的小计</h2><p>用rule规则验证，既快又省事。并且通过$model-&gt;getErrors()就能拿报错信息。<br>而且可以自定义规则，配合应用场景可以很轻松的写出各种验证，这里用登录注册一个例子。</p>
+<pre><code class="php">public function rules()
+{
+    [[&#39;username&#39;,&#39;password&#39;],&#39;required&#39;,&#39;message&#39;=&gt;&#39;请输入用户名/密码&#39;,&#39;on&#39;=&gt;[&#39;login&#39;,&#39;register&#39;]],
+    [[&#39;re_password&#39;],&#39;required&#39;,&#39;message&#39;=&gt;&#39;请在输入重复密码&#39;,&#39;on&#39;=&gt;[&#39;register&#39;],
+    [[&#39;re_password&#39;],&#39;validateRe&#39;, &#39;skipOnEmpty&#39;=&gt;false, &#39;skipOnError&#39;=&gt;false,&#39;on&#39;=&gt;[&#39;register&#39;],
+}
+
+public function scenarios()
+{
+    return [
+        &#39;defualt&#39; =&gt; [&#39;username&#39;,&#39;password&#39;],  //这是不传场景值得时候去调用的字段验证
+        &#39;login&#39; =&gt;[&#39;username&#39;,&#39;password&#39;],
+        &#39;register&#39; =&gt;[&#39;username&#39;,&#39;password&#39;,&#39;repassword&#39;],
+    ];
+}
+
+/**
+ * 这是一个内联验证验证器 定义rules里 这里进行实现
+ * 内联验证器的关联属性接收到空输入或者它们已经失败了一些验证规则，则不会应用内联验证器。
+ * 所以在rules里添加了   &#39;skipOnEmpty&#39; =&gt; false, &#39;skipOnError&#39; =&gt; false 属性！！！表示强制去验证
+ */
+public function validateRe($attribute,$params)
+{
+    if($this-&gt;password != $this-&gt;re_password) {
+        $this -&gt;addError($attribute,&#39;两次密码输入不一样&#39;);
+    }
+}
 
 
-            <time class="post-time" datetime="2018-05-08T15:40:35.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-05-08</time>
-          </h2>
-        </li>
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-          <h2 class="no-background"  >
-            <span><a href="/2018/04/27/centos7-yum搭建-lnmp/">centos7 yum搭建 lnmp</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a></li></ul>
+</code></pre>
+<p>然后就控制器进行简单的调用就好</p>
+<pre><code class="php">public functin actionLogin()
+{
+    $params = \Yii::$app-&gt;requster-&gt;post();
+    $model = new User;
+    $model -&gt;setScenario(&#39;login&#39;);
+    $model -&gt;setAttribute($parmas);
+    if($model-&gt;validate()) {
+           //todo...进行一些登录操作
+          echo &#39;登录成功&#39;;
+    }else{
+         $error = $model -&gt;getErrors();
+         $e = array_values($error);
+         echo $e[0][0];
+    }
+}
+</code></pre>
+<p>同理 在注册接口 只要报场景值换成register就可以了</p>
+<pre><code class="php">$model -&gt;setScenario(&#39;register&#39;);
+</code></pre>
+<p>顺便一提 setScenario() 必须放在 setAttribute() 前面，不然会清除所有数据。</p>
+<blockquote>
+<p>参考地址–<a href="https://www.yiiframework.com/doc/guide/2.0/en/input-validation" target="_blank" rel="noopener">链接</a></p>
+</blockquote>
+<p><img src="/img/2018-06-01/1.jpg" alt="image"></p>
+<h2 id="yii2数据库数据-和-php数据之间的转换"><a href="#yii2数据库数据-和-php数据之间的转换" class="headerlink" title="yii2数据库数据 和 php数据之间的转换"></a>yii2数据库数据 和 php数据之间的转换</h2><p>我在开发时候，遇到了从数据库查询出来的数字写到另一个张表时，发现报错类型不符合。两张表的数据都应该是<br>int类型。为什么我查出来后就变成字符串了！？  </p>
+<p>后来发现原来pod库查询出来的数据都字符串，是yii通过处理对照数据表字段然后转换类型处理的。<br>也就是说yii帮我们处理好了查询数据的统一制度 。<br>但为什么我int类型查是字符的？<br><img src="/img/2018-06-01/2.jpg" alt="image"><br>原来我用的是 bigint 字段属性有用了unsigned 以及PHP_INT_SIZE 系统位数值得差异 转换string<br> 具体链接地址可以看看，小白的我基本以后有空再看吧~~外包正的好累啊！</p>
+<blockquote>
+<p>参考地址–<a href="http://www.digpage.com/db_datatype.html" target="_blank" rel="noopener">链接</a></p>
+</blockquote>
 
+	</div>
+	<div class="meta split">
+		
+			<span>本文总阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+		
+		<time class="post-date" datetime="2018-05-31T15:42:47.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-05-31</time>
+	</div>
+</article>
 
-            <time class="post-time" datetime="2018-04-27T13:50:50.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-04-27</time>
-          </h2>
-        </li>
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-          <h2 class="no-background"  >
-            <span><a href="/2018/04/22/虚拟机配置centos7静态IP/">虚拟机配置centos7静态IP</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a></li></ul>
+<!--评论-->
 
+	
+<div class="ds-thread" data-thread-key="yii2小点小计-1" data-title="yii2小点小计-1" data-url="http://yoursite.com/2018/05/31/yii2小点小计-1/"></div>
+<script type="text/javascript">
 
-            <time class="post-time" datetime="2018-04-22T15:19:16.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-04-22</time>
-          </h2>
-        </li>
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-          <h2 class="no-background"  >
-            <span><a href="/2018/04/19/给自己的信/">给自己的信</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a></li></ul>
+var duoshuoQuery = {short_name:"yumemor"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
 
-
-            <time class="post-time" datetime="2018-04-19T15:41:14.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-04-19</time>
-          </h2>
-        </li>
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-          <h2 class="no-background"  >
-            <span><a href="/2017/12/03/分享一些喜欢的图影/">分享一些喜欢的图影</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/兴趣/">兴趣</a></li></ul>
-
-
-            <time class="post-time" datetime="2017-12-03T06:11:37.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2017-12-03</time>
-          </h2>
-        </li>
-      
-                <!--<div class="type">
-          <div class="mask">
-            <i class="iconfont"></i>
-          </div>
-          </div>-->
-        <li class="post">
-          
-          <h2 class="no-background"  >
-            <span><a href="/2017/12/01/Jokerl的新世界/">Jokerl的新世界</a></span>
-            <!--添加标签-->
-            
-	  <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a></li></ul>
-
-
-            <time class="post-time" datetime="2017-12-01T03:20:26.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2017-12-01</time>
-          </h2>
-        </li>
-      
-    </ul>
-    
 
   
 </div>
+
+
+  <svg id="bigTriangleColor" width="100%" height="40" viewBox="0 0 100 102" preserveAspectRatio="none">
+    <path d="M0 0 L50 100 L100 0 Z"></path>
+  </svg>
+
+  
+
+
+  <div class="wrapper"></div>
 
 
 
