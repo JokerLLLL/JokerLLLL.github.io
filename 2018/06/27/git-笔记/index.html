@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>git-笔记 | jokerl-blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    
+      <link rel="icon" href="/favicon.ico">
+    
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="/js/google-code-prettify/tomorrow-night-eighties.min.css">
+
+  </head>
+
+  <body>
+
+<header>
+	<a id="logo" href="/" title="jokerl-blog">
+	<img src="/favicon.png" alt="jokerl-blog"></a>
+	
+	
+		<!--搜索栏-->
+		<i class="js-toggle-search iconfont icon-search"></i>
+
+
+<form class="js-search search-form search-form--modal" method="get" action="http://gushi.li" role="search">
+	<div class="search-form__inner">
+		<div>
+			<i class="iconfont icon-search"></i>
+			<input class="text-input" placeholder="Enter Key..." type="search">
+		</div>
+	</div>
+</form>
+	
+
+	
+		<!--侧边导航栏-->
+		<a id="nav-toggle" href="#"><span></span></a>
+
+<nav>
+	<div class="menu-top-container">
+		<ul id="menu-top" class="menu">
+			
+				
+				<li class="current-menu-item">
+					<a href="https://weibo.com/p/1005055489874102" target="_blank">Weibo</a>
+				</li>
+			
+				
+				<li class="current-menu-item">
+					<a href="https://github.com/JokerLLLL" target="_blank">Github</a>
+				</li>
+			
+				
+				<li class="current-menu-item">
+					<a href="https://www.zhihu.com/people/jokerl-king" target="_blank">Zhihu</a>
+				</li>
+			
+		</ul>
+		<ul class="menu">
+				
+				<div id="secondary" class="widget-area" role="complementary">
+				  
+				    
+  <aside class="widget-recent">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/2018/06/27/git-笔记/">git-笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/31/yii2小点小计-1/">yii2小点小计-1</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/08/我在努力成为搬运工/">我在努力成为搬运工</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/27/centos7-yum搭建-lnmp/">centos7 yum搭建 lnmp</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/22/虚拟机配置centos7静态IP/">虚拟机配置centos7静态IP</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+				  
+				    
+  <aside class="widget-tag">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-content">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/兴趣/">兴趣</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情/">心情</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术/">技术</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </aside>
+
+				  
+				    
+  <aside class="widget-cloud">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-content tagcloud">
+      <a href="/tags/兴趣/" style="font-size: 10px;">兴趣</a> <a href="/tags/心情/" style="font-size: 15px;">心情</a> <a href="/tags/技术/" style="font-size: 20px;">技术</a>
+    </div>
+  </aside>
+
+				  
+				    
+  <aside class="widget-music">
+    <h3 class="widget-title">Music</h3>
+    <div class="widget-content">
+      <audio src="/Grapevine Valentine.mp3" controls="controls"
+             style="width:100%">
+        您的浏览器不支持 audio 标签。
+      </audio>
+    </div>
+  </aside>
+
+				  
+				</div>
+		</ul>
+	</div>
+</nav>
+	
+
+</header>
+<div class="m-header ">
+	<section id="hero1" class="hero">
+		<div class="inner">
+		</div>
+	</section>
+	
+		<figure class="top-image" data-enable=true></figure>
+	
+</div>
+
+<!--文章列表-->
+<div class="wrapper">
+  
+    <!--文章-->
+<article>
+	
+  
+    <h1 class="post-title" itemprop="name">
+      git-笔记
+    </h1>
+  
+
+
+	<div class='post-body mb'>
+		<h2 id="git的理解"><a href="#git的理解" class="headerlink" title="git的理解"></a>git的理解</h2><p>工欲善其事，必先利其器。对于开发git就是一把刀，理解怎么用能有效的节省合作开发，部署开发的时间。<br>git的学习 ：<br>1、主要理解 工作区 暂存区 和 版本树 的关系。<br>2、本地理解分支 然后远程仓库 还有远程分支和本地分支的关系。<br>3、最后中心版本库的建立 以及本地代码推送时 自动部署到服务器。<br>对于这些学习连接给出：</p>
+<blockquote>
+<p><a href="https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%85%B3%E4%BA%8E%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6" target="_blank" rel="noopener">git官网book</a>;<br><a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">廖雪峰git学习</a>;<br><a href="https://blog.csdn.net/myzht1122/article/details/79261459" target="_blank" rel="noopener">git版本库搭建</a>;<br><a href="https://blog.csdn.net/naruto227/article/details/53750282" target="_blank" rel="noopener">git仓库与钩子hook的配置</a>;</p>
+</blockquote>
+<h2 id="git-基础命令-当时学的有些未理解"><a href="#git-基础命令-当时学的有些未理解" class="headerlink" title="git 基础命令(当时学的有些未理解)"></a>git 基础命令(当时学的有些未理解)</h2><pre><code class="markdown">初始化一个仓库      git init
+
+查看仓库状态        git status
+
+预提交仓库          git add .
+
+移除缓存            git rm -cached
+
+正式更新提交        git commit -m &#39;first commit&#39;
+
+查看分支所在位置     git branch
+
+查看所有commit记录   git log
+
+新建分支            git branch test1
+
+切换分支            git checkout test1
+
+                   git checkout v1.0
+
+                   git checkout 8739df5828a9a4c2ef3de8fa83880f73e0f920d2   [commit_id ]
+
+                   git checkout abc  [将未add的文件进行还原]
+
+新建切换           git checkout -b test2
+
+合并分支到master   git merge  test1
+
+删除分支           git branch -d test1
+
+                   git branch -D test1  [强制删除]
+
+标签历史           git tag
+
+新建标签           git tag v1.0
+
+SSH链接远程仓库    ssh-keygen -t rsa
+生成SSH key  生成id_rsa和id_rsa.pub        
+Linux/Mac 系统 在 ~/.ssh 下，win系统在 /c/Documents and Settings/username/.ssh
+然后将id_rsa.pub 的内容添加到 GitHub
+
+Push &amp; Pull
+
+克隆远程仓库      git clone git@github.com:JokerLLLL/gitTest.git
+
+本地执行 add commit
+
+更新远程仓库       git push origin master  
+
+关联本地和远程仓库 git remote add origin    [origin]为仓库设置的名称
+
+设置全局姓名邮箱   git config --global user.name &quot;jokerl&quot;
+
+                   git config --global user.email &quot;145645529@qq.com&quot;
+
+别名配置alias     git config --global alias.co checkou #别名
+
+                  git config --global alias.ci commit
+
+                  git config --global alias.st status
+
+                  git config --global alias.br branch
+
+                  git config --global alias.psm &#39;push origin master&#39;
+
+                  git config --global alias.plm &#39;pull origin master&#39;
+
+   #git lg        git config --global alias.lg &quot;log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit --date=relative&quot;
+
+
+其他配置          git config --global core.editor &quot;vim&quot;
+
+                  git config --global color.ui true
+
+                  git config --global core.quotepath false #设置显示中文文件名
+
+~/.gitconfig 文件 git config -l
+
+比较命令diff(比较add之前的改动）
+
+                  git diff
+</code></pre>
+<h1 id="后续追加理解的："><a href="#后续追加理解的：" class="headerlink" title="后续追加理解的："></a>后续追加理解的：</h1><h1 id="版本回退"><a href="#版本回退" class="headerlink" title="版本回退"></a>版本回退</h1><pre><code>git reset --hard 版本号或Head^
+退回某个版本或上几个版本
+
+git reflog
+查看历史命令 (带上版本号)
+
+git checkout -- [filename]
+把工作区回退到最后一次 git add 或 git commit 的状态
+
+git reset head
+把当前目录的 缓冲区里(git add 提交的) 的撤销
+</code></pre><h1 id="文件删除"><a href="#文件删除" class="headerlink" title="文件删除"></a>文件删除</h1><pre><code>git status
+查看是否有文件删除
+
+git rm [filename]
+提交到缓冲区(会删除工作区文件)
+
+git checkout -- [filename]
+如果想从版本库恢复
+
+git commit -m &#39;delete file&#39;
+提交版本库
+
+# 分支
+git checkout -b develop
+新建分支develop并把head头指向develop [-b表示 branch]
+
+git checkeout master
+把head头指向master(切换分支)
+
+git branch develop
+创建develop分支
+
+git branch [-a]
+查看分支 [所有,外加远程仓库]
+
+git branch -d develop
+删除分支
+
+git branch -D feature
+强制删除分支 {feature有提交，但未进行合并，会进行数据丢失}
+
+git merge develop
+在master分支中执行，合并 {这种合并会是fast forward,会破会树形结构,或会产生recursive报警=此时效果和--no-ff参数一样}
+
+git merge develop --no-ff -m &#39;meger master by jokerl&#39;
+--no-ff参数表示不使用fast forward提交，而进行了一次commit
+</code></pre><h1 id="隐藏工作区"><a href="#隐藏工作区" class="headerlink" title="隐藏工作区"></a>隐藏工作区</h1><pre><code>git stash
+需要切换其他分支 但工作区文件未并不想先提交 {对于新建文件 未追踪文件要先 git add 进行增加}
+
+git stash list
+查看备份
+
+git stash apply
+恢复工作区
+
+git stash drop
+丢弃备份
+
+git stash pop
+恢复+丢弃
+</code></pre><h1 id="远程仓库-多人合作"><a href="#远程仓库-多人合作" class="headerlink" title="远程仓库 + 多人合作"></a>远程仓库 + 多人合作</h1><pre><code>git remote
+得到远程默认仓库名，一般都为origin
+
+git remote -v
+查看具体可以push 和pull的源
+
+git clone git@127.0.0.1:demo.git
+git clone http://127.0.0.1/demo.git
+git clone /c/demo/demo.git
+克隆远程仓库
+
+git checkout -b develop origin/develop
+创建本地的develop并关联远程仓库的devel的分支
+
+git branch --set-upstream-to=origin/develop
+关联本地分支和远程分支
+
+git push [origin] [master]
+在哪个分支下使用 push 就推送那个分支 或向这样完整写明
+</code></pre><h1 id="标签功能"><a href="#标签功能" class="headerlink" title="标签功能"></a>标签功能</h1><pre><code>git tag
+查看所以标签
+
+git tag v1.0 [commit_id]
+添加当前标签或某个提交点标签
+
+git show v1.0
+查看标签节点变得信息
+
+git tag -a v2.0 -m &#39;版本2.0&#39; [commit_id]
+添加标签和备注
+
+git push origin v1.0
+推送标签
+
+git push origin --tags
+推送所有标签
+
+git tag -d v1.0
+删除标签
+
+git push origin :refs/tags/v1.0
+删除远程标签
+</code></pre><h1 id="服务器部署"><a href="#服务器部署" class="headerlink" title="服务器部署"></a>服务器部署</h1><pre><code>git 挂钩功能(Hooks)
+在--bare 仓库中 进入hooks 加入post-receive的shell脚本
+在客户段提交时候 会自动更新到线上服务器
+
+注：权限！权限！权限！
+    1.post-receive 要有可执行权限
+    2.无论是git仓库，还好git要部署的代码都要 chmod -R git:git 
+    3.git在/etc/passwd 的bash不要动 不用改成git-bash(未改成git-bash可忽略)
+    4.shell脚本里 git命令都要使用 env -i 去执行
+</code></pre><p>post-receive例子 eg:</p>
+<pre><code class="sh">#!/bin/sh
+IS_BARE=$(git rev-parse --is-bare-repository)
+if [ -z &quot;$IS_BARE&quot; ]; then
+    echo &gt;&amp;2 &quot;fatal: post-receive: IS_NOT_BARE&quot;
+    exit 1
+fi
+SUBJECT=$(git log -1 --pretty=format:&quot;%s&quot;)
+IS_PULL=$(echo &quot;$SUBJECT&quot; | grep &quot;\[deploy\]&quot;)
+if [ -z &quot;$IS_PULL&quot; ]; then
+    echo &gt;&amp;2 &quot;tips: post-receive: IS_NOT_PULL&quot;
+    exit 1
+fi
+DEPLOY_DIR=/home/icyleaf/php/icyleaf/
+if [ ! -d $DEPLOY_DIR ] ; then
+    echo &gt;&amp;2 &quot;fatal: post-receive: DEPLOY_DIR_NOT_EXIST: \&quot;$DEPLOY_DIR\&quot;&quot;
+    exit 1
+fi
+cd $DEPLOY_DIR
+env -i git pull
+</code></pre>
+<pre><code class="sh">#!/bin/bash
+cd /path/test
+env -i git checkout develop
+env -i git pull origin develop
+</code></pre>
+
+	</div>
+	<div class="meta split">
+		
+			<span>本文总阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+		
+		<time class="post-date" datetime="2018-06-26T16:37:44.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-06-27</time>
+	</div>
+</article>
+
+<!--评论-->
+
+	
+<div class="ds-thread" data-thread-key="git-笔记" data-title="git-笔记" data-url="http://yoursite.com/2018/06/27/git-笔记/"></div>
+<script type="text/javascript">
+
+var duoshuoQuery = {short_name:"yumemor"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+  
+</div>
+
+
+  <svg id="bigTriangleColor" width="100%" height="40" viewBox="0 0 100 102" preserveAspectRatio="none">
+    <path d="M0 0 L50 100 L100 0 Z"></path>
+  </svg>
+
+  
+
+
+  <div class="wrapper"></div>
+
+
+
+
+
+<div class="fat-footer">
+	<div class="wrapper">
+		<div class="layout layout--center">
+			<div class="layout__item palm-mb">
+				<div class="media">
+					<img class="headimg" src='/avatar.jpg' alt='Jokerl'>
+					<div class="media__body">
+						<h4>Jokerl</h4>
+						<p class='site-description'>每一百万个人中，只有一人与你相似。</p>
+					</div>
+				</div>
+				<div class="author-contact">
+					<ul>
+						
+							
+							<li>
+				        		<a href="https://weibo.com/p/1005055489874102" target="_blank">
+				        			
+				        				<i class="iconfont icon-weibo"></i>
+				        			
+				        		</a>
+				        	</li>
+						
+							
+							<li>
+				        		<a href="https://github.com/JokerLLLL" target="_blank">
+				        			
+				        				<i class="iconfont icon-github"></i>
+				        			
+				        		</a>
+				        	</li>
+						
+							
+							<li>
+				        		<a href="https://www.zhihu.com/people/jokerl-king" target="_blank">
+				        			
+										<i class="iconfont icon-zhihu"></i>
+				        			
+				        		</a>
+				        	</li>
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<footer class="footer" role="contentinfo">
+	<div class="wrapper wrapper--wide split split--responsive">
+		
+			<span>本站总访问量 <span id="busuanzi_value_site_pv"></span> 次, 访客数 <span id="busuanzi_value_site_uv"></span> 人次</span>
+		
+		<span>Theme by <a href="http://github.com/yumemor">Yumemor</a>. Powered by <a href="http://hexo.io">Hexo</a></span>
+	</div>
+</footer>
+
+	<!-－这里导入了 lib.js 里面涵盖了 jQuery 等框架 所以注释掉-->
+	<!--<script src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script>-->
+	<script src="/js/lib.js"></script>
+	<script src="/js/google-code-prettify/prettify.js"></script>
+	<script src="/js/module.js"></script>
+	<script src="/js/script.js"></script>
+	<script src="/js/star.js"></script>
+	
+		<script async src="http://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+	<script type='text/javascript'>
+		//代码高亮
+		$(document).ready(function(){
+	 		$('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   			prettyPrint();
+		});
+	</script>
+	</body>
+</html>
