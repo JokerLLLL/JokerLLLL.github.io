@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>yii2小点小计-1 | jokerl-blog</title>
+    <title>权重抽奖 | jokerl-blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     
@@ -151,87 +151,129 @@
 	
   
     <h1 class="post-title" itemprop="name">
-      yii2小点小计-1
+      权重抽奖
     </h1>
   
 
 
 	<div class='post-body mb'>
-		<h2 id="yii2自带验证规则rules的小计"><a href="#yii2自带验证规则rules的小计" class="headerlink" title="yii2自带验证规则rules的小计"></a>yii2自带验证规则rules的小计</h2><p>用rule规则验证，既快又省事。并且通过$model-&gt;getErrors()就能拿报错信息。<br>而且可以自定义规则，配合应用场景可以很轻松的写出各种验证，这里用登录注册一个例子。</p>
-<pre><code class="php">public function rules()
-{
-    [[&#39;username&#39;,&#39;password&#39;],&#39;required&#39;,&#39;message&#39;=&gt;&#39;请输入用户名/密码&#39;,&#39;on&#39;=&gt;[&#39;login&#39;,&#39;register&#39;]],
-    [[&#39;re_password&#39;],&#39;required&#39;,&#39;message&#39;=&gt;&#39;请在输入重复密码&#39;,&#39;on&#39;=&gt;[&#39;register&#39;],
-    [[&#39;re_password&#39;],&#39;validateRe&#39;, &#39;skipOnEmpty&#39;=&gt;false, &#39;skipOnError&#39;=&gt;false,&#39;on&#39;=&gt;[&#39;register&#39;],
-}
-
-public function scenarios()
-{
-    return [
-        &#39;defualt&#39; =&gt; [&#39;username&#39;,&#39;password&#39;],  //这是不传场景值得时候去调用的字段验证
-        &#39;login&#39; =&gt;[&#39;username&#39;,&#39;password&#39;],
-        &#39;register&#39; =&gt;[&#39;username&#39;,&#39;password&#39;,&#39;repassword&#39;],
+		<h2 id="权重抽奖"><a href="#权重抽奖" class="headerlink" title="权重抽奖"></a>权重抽奖</h2><p>所谓权重抽奖就是控制抽奖的概率 ，使不同的奖品抽到的概率不同。<br>分析一下 就是奖品表有一字段，而字段的数越大，抽到的概率就越高。所以权重所占权重之后的百分比就是<br>该次物品的抽奖概率。</p>
+<p>以下是代码实现： 该方法只是不同物品抽一件抽到就停止的实现：</p>
+<pre><code class="php">    //先定义一个抽奖的数据 奖品=&gt;权重
+    $prizes = [
+      &#39;key1&#39;=&gt;1,
+      &#39;key2&#39;=&gt;9,
+      &#39;key3&#39;=&gt;10,
+      &#39;key4&#39;=&gt;30,
+      &#39;key5&#39;=&gt;50,
+      //....
     ];
-}
+    function draw($prizes) {
+      //权重总和
+      $total_weight = array_sum($prizes);
 
-/**
- * 这是一个内联验证验证器 定义rules里 这里进行实现
- * 内联验证器的关联属性接收到空输入或者它们已经失败了一些验证规则，则不会应用内联验证器。
- * 所以在rules里添加了   &#39;skipOnEmpty&#39; =&gt; false, &#39;skipOnError&#39; =&gt; false 属性！！！表示强制去验证
- */
-public function validateRe($attribute,$params)
-{
-    if($this-&gt;password != $this-&gt;re_password) {
-        $this -&gt;addError($attribute,&#39;两次密码输入不一样&#39;);
+      foreach($prizes as $k=&gt;$v) {
+           $rand_weight = mt_rand(1,$total_weight);
+           if($rand_weight &lt;= $v) {
+              //当随机的一个值 在权重里 说明被抽到了 然后break
+               $result = $k;
+               break;
+           }
+           //没有中将 就将该物品的权重 减去 然后继续foreach循环
+           $total_weight -= $v;
+      }
+      return $result;
     }
-}
-
 
 </code></pre>
-<p>然后就控制器进行简单的调用就好</p>
-<pre><code class="php">public functin actionLogin()
-{
-    $params = \Yii::$app-&gt;requster-&gt;post();
-    $model = new User;
-    $model -&gt;setScenario(&#39;login&#39;);
-    $model -&gt;setAttribute($parmas);
-    if($model-&gt;validate()) {
-           //todo...进行一些登录操作
-          echo &#39;登录成功&#39;;
-    }else{
-         $error = $model -&gt;getErrors();
-         $e = array_values($error);
-         echo $e[0][0];
+<p>该方法主要是 循环顺的先后 然后不中 把该物体的权重减去 而是后面的概率并不会发生变化。</p>
+<p>可以写个循环验证一下：</p>
+<pre><code class="php">$arr = [
+      &#39;key1&#39;=&gt;0,
+      &#39;key2&#39;=&gt;0,
+      &#39;key3&#39;=&gt;0,
+      &#39;key4&#39;=&gt;0,
+      &#39;key5&#39;=&gt;0,
+      //....
+];
+for($i=0;$i&lt;1000;$i++) {
+  $result = draw($prizes);
+  $arr[$result] ++; 
+}
+var_dump($arr);
+</code></pre>
+<p>答应结果可以知道 $arr key1 key2 key3…的比值刚好是权重之比左右。</p>
+<h2 id="权重抽奖-多个奖品"><a href="#权重抽奖-多个奖品" class="headerlink" title="权重抽奖 多个奖品"></a>权重抽奖 多个奖品</h2><p>最近刚好做抽奖 但是要做成不权重的人。奖品是统一的 却是有多个：<br>理下逻辑,其实就是不同权重的奖品 一起抽奖多个。<br>想了好久 本了是上面的方法改造不break 但好像会抽奖奖品数如果没抽奖完就得继续抽奖<br>后来就像到用递归的方法。本来是循环+递归 但后来验证数据有问题 所以有考虑了好久 。<br>只用产生一个奖品就break然后unset掉奖品和权重，然后进行递归，继续循环反而会加大概率偏移。</p>
+<p>话不多 上代码。还是同样的权重 抽奖三个物品</p>
+<pre><code class="php">    $prizes = [
+      &#39;key1&#39;=&gt;1,
+      &#39;key2&#39;=&gt;9,
+      &#39;key3&#39;=&gt;10,
+      &#39;key4&#39;=&gt;30,
+      &#39;key5&#39;=&gt;50,
+      //....
+    ];
+    function draw_many($prizes,$num) {
+          //定义一个结果数组
+          static $result = []; 
+          //判断奖品 或 是否没有需要抽的奖 
+          if(empty($prizes) || empty($num)) {
+             return $result;
+          }
+          //权重总和
+          $total_weight = array_sum($prizes);
+          foreach($prizes as $k=&gt;$v) {
+               $rand_weight = mt_rand(1,$total_weight);
+               if($rand_weight &lt;= $v) {
+                  //当随机的一个值 在权重里 说明被抽到了 然后break
+                   $result[] = $k;
+                   unset($prizes[$k]);
+                   $num --;
+                   break;
+               }
+               //没有中将 就将该物品的权重 减去 然后继续foreach循环
+                $total_weight -= $v;
+          }
+          //进行递归
+          $func = __FUNCTION__;
+          $func($prizes,$num);
+          //最后return 结果
+          return $result;
     }
+
+</code></pre>
+<p>整个结果就是这样，下面写个测试<br>由于static是静态变量 所以测试循环里 最后的结果就是多次结果的集合</p>
+<pre><code class="php">$arr = [
+      &#39;key1&#39;=&gt;0,
+      &#39;key2&#39;=&gt;0,
+      &#39;key3&#39;=&gt;0,
+      &#39;key4&#39;=&gt;0,
+      &#39;key5&#39;=&gt;0,
+      //....
+];
+for($i=0;$i&lt;1000;$i++) {
+  $result = draw_many($prizes,3);
 }
+foreach($result as $k=&gt;$v) {
+   $arr[$v] ++;
+}
+var_dump($arr);
 </code></pre>
-<p>同理 在注册接口 只要报场景值换成register就可以了</p>
-<pre><code class="php">$model -&gt;setScenario(&#39;register&#39;);
-</code></pre>
-<p>顺便一提 setScenario() 必须放在 setAttribute() 前面，不然会清除所有数据。</p>
-<blockquote>
-<p>参考地址–<a href="https://www.yiiframework.com/doc/guide/2.0/en/input-validation" target="_blank" rel="noopener">链接</a></p>
-</blockquote>
-<p><img src="/img/2018-06-01/1.jpg" alt="image"></p>
-<h2 id="yii2数据库数据-和-php数据之间的转换"><a href="#yii2数据库数据-和-php数据之间的转换" class="headerlink" title="yii2数据库数据 和 php数据之间的转换"></a>yii2数据库数据 和 php数据之间的转换</h2><p>我在开发时候，遇到了从数据库查询出来的数字写到另一个张表时，发现报错类型不符合。两张表的数据都应该是<br>int类型。为什么我查出来后就变成字符串了！？  </p>
-<p>后来发现原来pod库查询出来的数据都字符串，是yii通过处理对照数据表字段然后转换类型处理的。<br>也就是说yii帮我们处理好了查询数据的统一制度 。<br>但为什么我int类型查是字符的？<br><img src="/img/2018-06-01/2.jpg" alt="image"><br>原来我用的是 bigint 字段属性有用了unsigned 以及PHP_INT_SIZE 系统位数值得差异 转换string<br> 具体链接地址可以看看，小白的我基本以后有空再看吧~~外包正的好累啊！</p>
-<blockquote>
-<p>参考地址–<a href="http://www.digpage.com/db_datatype.html" target="_blank" rel="noopener">链接</a></p>
-</blockquote>
+<p>可以清楚看到结果的比例了；此刻的比例不是权重比 应为你是几个取三个 权重越高 占比越大。<br>而相同权重，是明显占比相同的。</p>
 
 	</div>
 	<div class="meta split">
 		
 			<span>本文总阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
 		
-		<time class="post-date" datetime="2018-05-31T15:42:47.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-05-31</time>
+		<time class="post-date" datetime="2018-07-04T15:31:33.000Z" itemprop="datePublished">&nbsp&#8226;&nbsp&nbsp&nbsp2018-07-04</time>
 	</div>
 </article>
 
 <!--评论-->
 
 	
-<div class="ds-thread" data-thread-key="yii2小点小计-1" data-title="yii2小点小计-1" data-url="http://yoursite.com/2018/05/31/yii2小点小计-1/"></div>
+<div class="ds-thread" data-thread-key="权重抽奖" data-title="权重抽奖" data-url="http://yoursite.com/2018/07/04/权重抽奖/"></div>
 <script type="text/javascript">
 
 var duoshuoQuery = {short_name:"yumemor"};
